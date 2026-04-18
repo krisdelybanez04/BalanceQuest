@@ -32,6 +32,13 @@ BalanceQuest enables a parent to send XLM or USDC to a student’s wallet, where
 - Soroban Smart Contracts  
 
 ---
+## 🌐 On-Chain Verification
+
+All contract logic, user interactions, and transactions are publicly verifiable on the Stellar ledger.
+
+<img width="1919" height="953" alt="image" src="https://github.com/user-attachments/assets/d370b70c-0cac-421c-ba00-821d2588e93b" />
+https://stellar.expert/explorer/testnet/contract/CAJVCMOL5CGCDFV5VFCGOQKH6PP7ZUSY6G3OA2IWGQJ4NNCQAHLUPTQ4
+
 
 ## 👥 Target Users
 
