@@ -3,6 +3,8 @@
 BalanceQuest is a mobile-first savings app that gamifies financial discipline by allowing users to lock small amounts of money into time-bound “missions.” Using Soroban smart contracts on Stellar, funds are securely locked and only released with rewards after successful completion, helping users control overspending and build better financial habits.
 
 ---
+## Live Demo
+https://balance-quest-chi.vercel.app/
 
 ## 📌 Problem
 
