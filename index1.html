@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BalanceQuest</title>
+<link rel="stylesheet" href="Balancequest.css">
+</head>
+<body>
+<div class="phone">
+
+  <div class="stars" id="stars"></div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon">⚡</span>
+    <span id="toastMsg">Mission locked!</span>
+  </div>
+
+  <!-- HOME PAGE -->
+  <div class="page active" id="page-home">
+    <div class="status-bar"><span>9:41</span><span>●●● WiFi 🔋</span></div>
+    <div class="page-header">
+      <div>
+        <div class="greeting">Welcome back</div>
+        <div class="page-title">Del 👋</div>
+      </div>
+      <div class="avatar">L</div>
+    </div>
+
+    <div class="wallet-card">
+      <div class="wallet-label">💼 Total Wallet Balance</div>
+      <div class="wallet-amount" id="walletAmt">₱3,240</div>
+      <div class="wallet-sub">≈ 8.21 XLM · Soroban Wallet</div>
+      <div class="wallet-row">
+        <div class="wallet-stat">
+          <div class="wallet-stat-label">Locked</div>
+          <div class="wallet-stat-val gold">₱1,200</div>
+        </div>
+        <div class="wallet-stat">
+          <div class="wallet-stat-label">Rewards Earned</div>
+          <div class="wallet-stat-val green">+₱340</div>
+        </div>
+        <div class="wallet-stat">
+          <div class="wallet-stat-label">Free</div>
+          <div class="wallet-stat-val">₱2,040</div>
+        </div>
+      </div>
+      <!-- NEW: Dynamic Wallet Info -->
+      <div id="walletDynamicInfo" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; color: var(--text); display: none;">
+        <div style="margin-bottom: 6px;">⏳ You still have <strong id="walletDaysLeft" style="color: var(--gold);">0 days</strong> to go before sahod.</div>
+        <div>💸 Your daily budget after bills is <strong id="walletDailyBudget" style="color: var(--green);">₱0</strong>.</div>
+      </div>
+    </div>
+
+    <div class="xp-bar-wrap">
+      <div class="xp-badge">⚡</div>
+      <div class="xp-info">
+        <div class="xp-label">Level 7 · Quest Saver</div>
+        <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+        <div class="xp-nums"><span>620</span> / 1000 XP to Level 8</div>
+      </div>
+    </div>
+
+    <!-- MONTHLY BUDGET PLANNER -->
+    <div class="budget-card">
+      <div class="budget-header" onclick="toggleBudget()">
+        <div class="budget-header-left">
+          <div class="budget-header-icon">📅</div>
+          <div>
+            <div class="budget-header-title">Monthly Budget Planner</div>
+            <div class="budget-header-sub" id="budgetHeaderSub">Tap to set up your salary &amp; bills</div>
+          </div>
+        </div>
+        <div class="budget-chevron" id="budgetChevron">▼</div>
+      </div>
+      <div class="budget-body" id="budgetBody">
+        <div class="budget-divider"></div>
+        <div class="budget-field">
+          <div class="budget-field-label"><span>💰</span> Monthly Salary / Allowance</div>
+          <div class="budget-input-wrap">
+            <span class="budget-peso">₱</span>
+            <input class="budget-input" type="number" id="bSalary" placeholder="e.g. 18000" oninput="calcBudget()">
+          </div>
+        </div>
+        <div class="bills-section-label">⚡ Monthly Bills</div>
+        <div class="bill-row">
+          <div class="bill-icon-label"><span class="bill-emoji">💧</span>Maynilad</div>
+          <div class="bill-input-wrap">
+            <span class="budget-peso" style="font-size:13px;margin-right:4px">₱</span>
+            <input class="bill-input" type="number" id="bMaynilad" placeholder="e.g. 350" oninput="calcBudget()">
+          </div>
+        </div>
+        <div class="bill-row">
+          <div class="bill-icon-label"><span class="bill-emoji">💡</span>Meralco</div>
+          <div class="bill-input-wrap">
+            <span class="budget-peso" style="font-size:13px;margin-right:4px">₱</span>
+            <input class="bill-input" type="number" id="bMeralco" placeholder="e.g. 800" oninput="calcBudget()">
+          </div>
+        </div>
+        <div class="bill-row">
+          <div class="bill-icon-label"><span class="bill-emoji">🏠</span>Apartment</div>
+          <div class="bill-input-wrap">
+            <span class="budget-peso" style="font-size:13px;margin-right:4px">₱</span>
+            <input class="bill-input" type="number" id="bRent" placeholder="e.g. 5000" oninput="calcBudget()">
+          </div>
+        </div>
+        <div style="margin-top:4px;margin-bottom:2px">
+          <div id="extraBillsToggle" onclick="toggleExtraBills()" style="font-size:12px;color:var(--blue);cursor:pointer;display:inline-flex;align-items:center;gap:4px">+ Add another bill</div>
+        </div>
+        <div id="extraBillsWrap" style="display:none">
+          <div class="bill-row" style="margin-top:8px">
+            <div class="bill-input-wrap" style="flex:none;width:110px;margin-right:0">
+              <input class="bill-input" type="text" id="bExtraName" placeholder="Bill name" oninput="calcBudget()" style="font-weight:400;font-size:13px">
+            </div>
+            <div class="bill-input-wrap" style="margin-left:8px">
+              <span class="budget-peso" style="font-size:13px;margin-right:4px">₱</span>
+              <input class="bill-input" type="number" id="bExtraAmt" placeholder="Amount" oninput="calcBudget()">
+            </div>
+          </div>
+        </div>
+        <div class="days-row">
+          <span class="days-label">Days until next payday:</span>
+          <div class="days-input-wrap">
+            <input class="days-input" type="number" id="bDays" placeholder="15" min="1" max="31" oninput="calcBudget()">
+          </div>
+          <span class="days-suffix">days</span>
+        </div>
+        <div class="budget-result" id="budgetResult" style="display:none">
+          <div class="result-row">
+            <span class="result-label">💰 Monthly salary</span>
+            <span class="result-val" id="rSalary">—</span>
+          </div>
+          <div class="result-divider"></div>
+          <div class="result-row">
+            <span class="result-label">💧 Maynilad</span>
+            <span class="result-val red" id="rMaynilad">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">💡 Meralco</span>
+            <span class="result-val red" id="rMeralco">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">🏠 Apartment rent</span>
+            <span class="result-val red" id="rRent">—</span>
+          </div>
+          <div class="result-row" id="rExtraRow" style="display:none">
+            <span class="result-label" id="rExtraLabel">Other bill</span>
+            <span class="result-val red" id="rExtra">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">📋 Total bills</span>
+            <span class="result-val red" id="rTotalBills">—</span>
+          </div>
+          <div class="result-main">
+            <div>
+              <div class="result-main-label">Money left after bills</div>
+              <div style="font-size:11px;color:var(--dim);margin-top:2px" id="rDailyLabel">÷ days = daily budget</div>
+            </div>
+            <div style="text-align:right">
+              <div class="result-main-val" id="rRemaining">₱0</div>
+              <div style="font-size:12px;margin-top:2px;font-weight:600" id="rDaily"></div>
+            </div>
+          </div>
+          <div class="result-pct-bar">
+            <div class="result-pct-label">
+              <span>Bills as % of salary</span>
+              <span id="rPct">0%</span>
+            </div>
+            <div class="prog-track">
+              <div class="prog-fill" id="rPctBar" style="width:0%;background:linear-gradient(90deg,var(--green2),var(--green))"></div>
+            </div>
+          </div>
+          <div class="budget-warning" id="budgetWarning"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert-banner">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-text"><strong>Heads up!</strong> You've spent ₱800 on food delivery this week. Your Food Lock mission ends in 2 days — stay strong!</div>
+    </div>
+
+    <div class="section-label">
+      <span>Active Missions</span>
+      <a onclick="switchPage('missions')">See all →</a>
+    </div>
+
+    <div class="missions">
+      <div class="mission-card active-mission color-green" onclick="openMissionDetail('food')">
+        <div class="mission-top">
+          <div class="mission-icon green">🍱</div>
+          <div class="mission-meta">
+            <div class="mission-name">Food Lock Challenge</div>
+            <div class="mission-desc">Lock ₱500 · No food delivery</div>
+          </div>
+          <span class="mission-badge badge-active">Active</span>
+        </div>
+        <div class="mission-progress">
+          <div class="progress-row"><span class="progress-left">Day 3 of 5</span><span class="progress-right green">60%</span></div>
+          <div class="prog-track"><div class="prog-fill green" style="width:60%"></div></div>
+        </div>
+        <div class="mission-footer">
+          <div class="mission-reward">Reward <span class="reward-pill">+₱75 + 120 XP</span></div>
+          <span class="days-left">2 days left</span>
+        </div>
+      </div>
+      <div class="mission-card color-gold" onclick="openMissionDetail('commute')">
+        <div class="mission-top">
+          <div class="mission-icon gold">🚌</div>
+          <div class="mission-meta">
+            <div class="mission-name">Commute Saver</div>
+            <div class="mission-desc">Lock ₱300 · Jeep only week</div>
+          </div>
+          <span class="mission-badge badge-active">Active</span>
+        </div>
+        <div class="mission-progress">
+          <div class="progress-row"><span class="progress-left">Day 5 of 7</span><span class="progress-right gold">71%</span></div>
+          <div class="prog-track"><div class="prog-fill gold" style="width:71%"></div></div>
+        </div>
+        <div class="mission-footer">
+          <div class="mission-reward">Reward <span class="reward-pill">+₱50 + 80 XP</span></div>
+          <span class="days-left">2 days left</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:20px"><span>Quick Actions</span></div>
+    <div class="quick-actions">
+      <div class="qa-btn" onclick="openNewMission()">
+        <div class="qa-icon" style="background:rgba(79,142,247,0.12)">🔒</div>
+        <div><div class="qa-label">Lock Funds</div><div class="qa-sub">Start a mission</div></div>
+      </div>
+      <div class="qa-btn" onclick="switchPage('chat')">
+        <div class="qa-icon" style="background:rgba(163,116,247,0.12)">🤖</div>
+        <div><div class="qa-label">Questy AI</div><div class="qa-sub">Ask for tips</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSIONS PAGE -->
+  <div class="page" id="page-missions">
+    <div class="status-bar"><span>9:41</span><span>●●● WiFi 🔋</span></div>
+    <div class="page-header">
+      <div><div class="greeting">On-chain missions</div><div class="page-title">Missions 🗺️</div></div>
+      <div class="avatar">L</div>
+    </div>
+    <div class="missions">
+      <div class="mission-card active-mission color-green" onclick="openMissionDetail('food')">
+        <div class="mission-top"><div class="mission-icon green">🍱</div><div class="mission-meta"><div class="mission-name">Food Lock Challenge</div><div class="mission-desc">Lock ₱500 for 5 days, no Grab Food</div></div><span class="mission-badge badge-active">Active</span></div>
+        <div class="mission-progress"><div class="progress-row"><span class="progress-left">Day 3 of 5</span><span class="progress-right green">60%</span></div><div class="prog-track"><div class="prog-fill green" style="width:60%"></div></div></div>
+        <div class="mission-footer"><div class="mission-reward">Reward <span class="reward-pill">+₱75 + 120 XP</span></div><span class="days-left">2 days left</span></div>
+      </div>
+      <div class="mission-card color-gold" onclick="openMissionDetail('commute')">
+        <div class="mission-top"><div class="mission-icon gold">🚌</div><div class="mission-meta"><div class="mission-name">Commute Saver</div><div class="mission-desc">Lock ₱300 · Use jeep all week</div></div><span class="mission-badge badge-active">Active</span></div>
+        <div class="mission-progress"><div class="progress-row"><span class="progress-left">Day 5 of 7</span><span class="progress-right gold">71%</span></div><div class="prog-track"><div class="prog-fill gold" style="width:71%"></div></div></div>
+        <div class="mission-footer"><div class="mission-reward">Reward <span class="reward-pill">+₱50 + 80 XP</span></div><span class="days-left">2 days left</span></div>
+      </div>
+      <div class="mission-card color-blue">
+        <div class="mission-top"><div class="mission-icon blue">📚</div><div class="mission-meta"><div class="mission-name">Exam Week Lock</div><div class="mission-desc">Lock ₱700 · Study mode savings</div></div><span class="mission-badge badge-done">Completed ✓</span></div>
+        <div class="mission-progress"><div class="progress-row"><span class="progress-left">7 of 7 days</span><span class="progress-right blue">100%</span></div><div class="prog-track"><div class="prog-fill blue" style="width:100%"></div></div></div>
+        <div class="mission-footer"><div class="mission-reward">Earned <span class="reward-pill">+₱140 + 200 XP</span></div><span class="days-left" style="color:var(--green)">✓ Claimed</span></div>
+      </div>
+    </div>
+    <div class="new-mission-btn" onclick="openNewMission()">
+      <div class="plus-icon">+</div>
+      Create Custom Mission
+    </div>
+  </div>
+
+  <!-- STATS PAGE -->
+  <div class="page" id="page-stats">
+    <div class="status-bar"><span>9:41</span><span>●●● WiFi 🔋</span></div>
+    <div class="page-header">
+      <div><div class="greeting">This month</div><div class="page-title">Stats 📊</div></div>
+      <div class="avatar">L</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-card-label">Total Saved</div><div class="stat-card-val green">₱1,540</div><div class="stat-card-sub">+₱340 rewards</div></div>
+      <div class="stat-card"><div class="stat-card-label">XP Earned</div><div class="stat-card-val gold">620</div><div class="stat-card-sub">Level 7 · 380 to go</div></div>
+      <div class="stat-card"><div class="stat-card-label">Missions Done</div><div class="stat-card-val blue">3</div><div class="stat-card-sub">2 active</div></div>
+      <div class="stat-card"><div class="stat-card-label">Day Streak</div><div class="stat-card-val purple">12 🔥</div><div class="stat-card-sub">Personal best!</div></div>
+    </div>
+    <div class="streak-card">
+      <div class="section-label" style="padding:0;margin-bottom:0">This Week's Streak</div>
+      <div class="streak-days">
+        <div class="streak-day done"><div class="streak-dot"></div>MON</div>
+        <div class="streak-day done"><div class="streak-dot"></div>TUE</div>
+        <div class="streak-day done"><div class="streak-dot"></div>WED</div>
+        <div class="streak-day today"><div class="streak-dot"></div>THU</div>
+        <div class="streak-day"><div class="streak-dot"></div>FRI</div>
+        <div class="streak-day"><div class="streak-dot"></div>SAT</div>
+        <div class="streak-day"><div class="streak-dot"></div>SUN</div>
+      </div>
+    </div>
+    <div class="spending-card" style="margin-top:12px">
+      <div class="section-label" style="padding:0 0 12px">Spending Breakdown</div>
+      <div class="spend-item"><div class="spend-row"><span class="spend-cat"><span class="spend-cat-icon">🍱</span>Food Delivery</span><span class="spend-amt" style="color:var(--red)">₱820</span></div><div class="prog-track"><div class="prog-fill" style="width:82%;background:linear-gradient(90deg,#a11,var(--red))"></div></div></div>
+      <div class="spend-item"><div class="spend-row"><span class="spend-cat"><span class="spend-cat-icon">🚌</span>Transport</span><span class="spend-amt" style="color:var(--gold)">₱320</span></div><div class="prog-track"><div class="prog-fill gold" style="width:32%"></div></div></div>
+      <div class="spend-item"><div class="spend-row"><span class="spend-cat"><span class="spend-cat-icon">🛒</span>Groceries</span><span class="spend-amt" style="color:var(--green)">₱250</span></div><div class="prog-track"><div class="prog-fill green" style="width:25%"></div></div></div>
+    </div>
+  </div>
+
+  <!-- QUESTY AI CHAT PAGE (REPLACED LEAGUE) -->
+  <div class="page" id="page-chat">
+    <div class="status-bar"><span>9:41</span><span>●●● WiFi 🔋</span></div>
+    <div class="page-header">
+      <div><div class="greeting">AI Budget Advisor</div><div class="page-title">Questy 🤖</div></div>
+      <div class="avatar">L</div>
+    </div>
+    <div class="chat-container" id="chatContainer">
+      <div class="chat-message bot">
+        Hi Del! I'm Questy, your AI budget advisor. Ask me how much you should lock today, or tips to budget your funds based on your current stats!
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Message Questy..." onkeypress="handleChatKeyPress(event)">
+      <button onclick="sendChatMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- PROFILE PAGE -->
+  <div class="page" id="page-profile">
+    <div class="status-bar"><span>9:41</span><span>●●● WiFi 🔋</span></div>
+    <div class="profile-header">
+      <div class="profile-avatar">L</div>
+      <div class="profile-name">Del Ybanez</div>
+      <div class="profile-tag">@del@gmail.com · Quezon City, PH</div>
+      <div class="profile-level">⚡ Level 7 · Quest Saver</div>
+    </div>
+    <div class="section-label">Earned Badges</div>
+    <div class="badges-grid">
+      <div class="badge-item earned"><div class="badge-emoji">🔥</div><div class="badge-name">7-Day Streak</div></div>
+      <div class="badge-item earned"><div class="badge-emoji">🍱</div><div class="badge-name">Food Fighter</div></div>
+      <div class="badge-item earned"><div class="badge-emoji">🚌</div><div class="badge-name">Commute Pro</div></div>
+      <div class="badge-item locked-b"><div class="badge-emoji">💎</div><div class="badge-name">Diamond Saver</div></div>
+    </div>
+    <div class="section-label" style="margin-top:16px">Account</div>
+    <div class="settings-list">
+      <div class="settings-item" onclick="showToast('🔗','Wallet: GDEX...7KLM')"><span class="settings-icon">💼</span><span class="settings-label">Stellar Wallet</span><span class="settings-arrow">›</span></div>
+      <div class="settings-item" onclick="showToast('👨‍👩‍👧','OFW parent linked!')"><span class="settings-icon">👨‍👩‍👧</span><span class="settings-label">Linked Senders</span><span class="settings-arrow">›</span></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="nav">
+    <div class="nav-item active" id="nav-home" onclick="switchPage('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+    <div class="nav-item" id="nav-missions" onclick="switchPage('missions')"><div class="nav-icon">🗺️</div><div class="nav-label">Missions</div></div>
+    <div class="nav-item" id="nav-chat" onclick="switchPage('chat')"><div class="nav-icon">🤖</div><div class="nav-label">Questy</div></div>
+    <div class="nav-item" id="nav-stats" onclick="switchPage('stats')"><div class="nav-icon">📊</div><div class="nav-label">Stats</div></div>
+    <div class="nav-item" id="nav-profile" onclick="switchPage('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
+  </nav>
+
+  <!-- NEW MISSION MODAL -->
+  <div class="modal-bg" id="newMissionModal" onclick="closeModal('newMissionModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-title">🔒 Lock Funds</div>
+      <div class="modal-sub">Create a Soroban smart contract mission. Funds unlock + reward when complete.</div>
+      <div class="modal-input-label">Mission Name</div>
+      <input class="modal-input" type="text" placeholder="e.g. Food Budget Lock" id="missionName">
+      <div class="modal-input-label">Amount to Lock (₱)</div>
+      <div class="preset-row">
+        <span class="preset-chip" onclick="setPreset(this,'100')">₱100</span>
+        <span class="preset-chip" onclick="setPreset(this,'200')">₱200</span>
+        <span class="preset-chip" onclick="setPreset(this,'500')">₱500</span>
+        <span class="preset-chip" onclick="setPreset(this,'1000')">₱1,000</span>
+      </div>
+      <input class="modal-input" type="number" placeholder="Enter custom amount" id="missionAmt">
+      <div class="modal-input-label">Duration</div>
+      <div class="preset-row">
+        <span class="preset-chip" onclick="setDuration(this,'3 Days')">3 Days</span>
+        <span class="preset-chip" onclick="setDuration(this,'5 Days')">5 Days</span>
+        <span class="preset-chip selected" onclick="setDuration(this,'7 Days')">7 Days</span>
+        <span class="preset-chip" onclick="setDuration(this,'14 Days')">14 Days</span>
+      </div>
+      <button class="modal-btn" onclick="createMission()">⚡ Lock &amp; Start Mission</button>
+    </div>
+  </div>
+
+  <!-- MISSION DETAIL MODAL -->
+  <div class="modal-bg" id="missionDetailModal" onclick="closeModal('missionDetailModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+</div>
+<script src="Balancequest.js"></script>
+</body>
+</html>
+
