@@ -56,7 +56,6 @@ function createMission() {
   const amt  = document.getElementById('missionAmt').value || '200';
   closeModal('newMissionModal');
 
-  // Burst emoji animation
   const emojis = ['⚡', '🔒', '✨', '💰', '🎯'];
   emojis.forEach((e, i) => {
     const b = document.createElement('div');
@@ -69,7 +68,6 @@ function createMission() {
 
   setTimeout(() => showToast('⚡', `"${name}" mission locked on Stellar!`), 300);
 
-  // Dynamically add new mission card to the missions page list
   setTimeout(() => {
     const missions = document.querySelectorAll('.missions')[1];
     const card = document.createElement('div');
@@ -181,8 +179,13 @@ function calcBudget() {
   const extraName = document.getElementById('bExtraName').value || 'Other bill';
   const days      = parseInt(document.getElementById('bDays').value)       || 0;
 
+  // Update Total Wallet Balance with Monthly Salary
+  const walletAmtEl = document.getElementById('walletAmt');
+  if (walletAmtEl) walletAmtEl.textContent = salary > 0 ? fmt(salary) : '₱3,240';
+
   if (!salary) {
     document.getElementById('budgetResult').style.display = 'none';
+    document.getElementById('walletDynamicInfo').style.display = 'none';
     return;
   }
 
@@ -191,17 +194,23 @@ function calcBudget() {
   const dailyBudget = days > 0 ? remaining / days : 0;
   const billsPct    = salary > 0 ? Math.min((totalBills / salary) * 100, 100) : 0;
 
-  // Show result card
-  document.getElementById('budgetResult').style.display = 'block';
+  // Update Wallet Dynamic Subtext under balance
+  const walletDynamicInfo = document.getElementById('walletDynamicInfo');
+  if (days > 0 && remaining > 0) {
+    walletDynamicInfo.style.display = 'block';
+    document.getElementById('walletDaysLeft').textContent = days + (days === 1 ? ' day' : ' days');
+    document.getElementById('walletDailyBudget').textContent = fmt(dailyBudget);
+  } else {
+    walletDynamicInfo.style.display = 'none';
+  }
 
-  // Populate values
+  document.getElementById('budgetResult').style.display = 'block';
   document.getElementById('rSalary').textContent    = fmt(salary);
   document.getElementById('rMaynilad').textContent  = maynilad ? '−' + fmt(maynilad) : '₱0';
   document.getElementById('rMeralco').textContent   = meralco  ? '−' + fmt(meralco)  : '₱0';
   document.getElementById('rRent').textContent      = rent     ? '−' + fmt(rent)      : '₱0';
   document.getElementById('rTotalBills').textContent = '−' + fmt(totalBills);
 
-  // Extra bill row
   const extraRow = document.getElementById('rExtraRow');
   if (extraAmt > 0) {
     extraRow.style.display = 'flex';
@@ -211,20 +220,14 @@ function calcBudget() {
     extraRow.style.display = 'none';
   }
 
-  // Remaining amount — color-coded
   const remEl = document.getElementById('rRemaining');
   remEl.textContent = fmt(Math.abs(remaining));
-  remEl.className = 'result-main-val ' + (
-    remaining < 0 ? 'red' :
-    remaining < salary * 0.3 ? 'gold' : 'green'
-  );
+  remEl.className = 'result-main-val ' + (remaining < 0 ? 'red' : remaining < salary * 0.3 ? 'gold' : 'green');
 
-  // Daily budget
   const dailyEl = document.getElementById('rDaily');
   if (days > 0 && remaining > 0) {
     dailyEl.textContent = fmt(dailyBudget) + '/day';
-    dailyEl.style.color = dailyBudget < 200 ? 'var(--red)' :
-                          dailyBudget < 400 ? 'var(--gold)' : 'var(--green)';
+    dailyEl.style.color = dailyBudget < 200 ? 'var(--red)' : dailyBudget < 400 ? 'var(--gold)' : 'var(--green)';
     document.getElementById('rDailyLabel').textContent = '÷ ' + days + ' days = daily budget';
   } else if (remaining <= 0) {
     dailyEl.textContent = 'Deficit!';
@@ -235,18 +238,12 @@ function calcBudget() {
     document.getElementById('rDailyLabel').textContent = 'Enter days until payday';
   }
 
-  // Bills % bar
   const pctRounded = Math.round(billsPct);
   document.getElementById('rPct').textContent = pctRounded + '%';
   const bar = document.getElementById('rPctBar');
   bar.style.width = pctRounded + '%';
-  bar.style.background = billsPct > 75
-    ? 'linear-gradient(90deg,#a11,var(--red))'
-    : billsPct > 50
-      ? 'linear-gradient(90deg,var(--gold2),var(--gold))'
-      : 'linear-gradient(90deg,var(--green2),var(--green))';
+  bar.style.background = billsPct > 75 ? 'linear-gradient(90deg,#a11,var(--red))' : billsPct > 50 ? 'linear-gradient(90deg,var(--gold2),var(--gold))' : 'linear-gradient(90deg,var(--green2),var(--green))';
 
-  // Smart warning / tip
   const warn = document.getElementById('budgetWarning');
   if (remaining < 0) {
     warn.className = 'budget-warning show warn';
@@ -264,10 +261,75 @@ function calcBudget() {
     warn.className = 'budget-warning';
   }
 
-  // Update collapsed header subtitle
   if (remaining > 0 && days > 0) {
     document.getElementById('budgetHeaderSub').textContent = fmt(dailyBudget) + '/day after bills';
   } else if (salary > 0) {
     document.getElementById('budgetHeaderSub').textContent = fmt(remaining) + ' left after bills';
   }
+}
+
+// ── QUESTY AI CHATBOT ────────────────────────────────────────────────────────
+function handleChatKeyPress(e) {
+  if (e.key === 'Enter') sendChatMessage();
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  addChatMessage(text, 'user');
+  input.value = '';
+
+  setTimeout(() => {
+    const response = generateBotResponse(text);
+    addChatMessage(response, 'bot');
+  }, 600);
+}
+
+function addChatMessage(text, sender) {
+  const container = document.getElementById('chatContainer');
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `chat-message ${sender}`;
+  msgDiv.textContent = text;
+  container.appendChild(msgDiv);
+  container.scrollTop = container.scrollHeight;
+}
+
+function generateBotResponse(text) {
+  const lower = text.toLowerCase();
+  
+  // Grab current budget values
+  const salary    = parseFloat(document.getElementById('bSalary').value)   || 0;
+  const maynilad  = parseFloat(document.getElementById('bMaynilad').value) || 0;
+  const meralco   = parseFloat(document.getElementById('bMeralco').value)  || 0;
+  const rent      = parseFloat(document.getElementById('bRent').value)     || 0;
+  const extraAmt  = parseFloat(document.getElementById('bExtraAmt').value) || 0;
+  const days      = parseInt(document.getElementById('bDays').value)       || 0;
+  
+  const totalBills  = maynilad + meralco + rent + extraAmt;
+  const remaining   = salary - totalBills;
+  const dailyBudget = days > 0 ? remaining / days : 0;
+
+  // Bot logic
+  if (lower.includes('lock') || lower.includes('how much')) {
+    if (dailyBudget > 0) {
+      const suggestedLock = Math.round(dailyBudget * 0.2); // 20% safe lock
+      return `Since your computed daily limit is ₱${Math.round(dailyBudget)}, a safe play is locking ₱${suggestedLock} per day. Want to start a 5-day mission for ₱${suggestedLock * 5}?`;
+    } else {
+      return "Please input your Salary and Days until Payday on the Home page first! Then I can give you exact locking advice based on your real daily budget.";
+    }
+  }
+
+  if (lower.includes('gastos') || lower.includes('daily') || lower.includes('budget')) {
+    if (dailyBudget > 0) {
+      return `Right now, considering your ₱${totalBills} bills, you strictly have ₱${Math.round(dailyBudget)} per day to spend for the next ${days} days. Stay below this to avoid a deficit!`;
+    }
+  }
+
+  if (lower.includes('bill')) {
+    return `Your total declared monthly bills are ₱${totalBills}. Keep track of them to prevent overspending!`;
+  }
+
+  return "I'm Questy! Ask me 'How much should I lock today?' and I'll compute a safe amount based on your budget planner.";
 }

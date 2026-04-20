@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BalanceQuest</title>
-<link rel="stylesheet" href="balancequest.css">
+<link rel="stylesheet" href="Balancequest.css">
 </head>
 <body>
 <div class="phone">
@@ -22,7 +22,7 @@
     <div class="page-header">
       <div>
         <div class="greeting">Welcome back</div>
-        <div class="page-title">Lex 👋</div>
+        <div class="page-title">Del 👋</div>
       </div>
       <div class="avatar">L</div>
     </div>
@@ -44,6 +44,11 @@
           <div class="wallet-stat-label">Free</div>
           <div class="wallet-stat-val">₱2,040</div>
         </div>
+      </div>
+      <!-- NEW: Dynamic Wallet Info -->
+      <div id="walletDynamicInfo" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; color: var(--text); display: none;">
+        <div style="margin-bottom: 6px;">⏳ You still have <strong id="walletDaysLeft" style="color: var(--gold);">0 days</strong> to go before sahod.</div>
+        <div>💸 Your daily budget after bills is <strong id="walletDailyBudget" style="color: var(--green);">₱0</strong>.</div>
       </div>
     </div>
 
@@ -225,17 +230,9 @@
         <div class="qa-icon" style="background:rgba(79,142,247,0.12)">🔒</div>
         <div><div class="qa-label">Lock Funds</div><div class="qa-sub">Start a mission</div></div>
       </div>
-      <div class="qa-btn" onclick="showToast('💸','Payout requested!')">
-        <div class="qa-icon" style="background:rgba(61,232,138,0.12)">💸</div>
-        <div><div class="qa-label">Request XLM</div><div class="qa-sub">From parent wallet</div></div>
-      </div>
-      <div class="qa-btn" onclick="switchPage('stats')">
-        <div class="qa-icon" style="background:rgba(245,200,66,0.12)">📊</div>
-        <div><div class="qa-label">Spending Log</div><div class="qa-sub">Track expenses</div></div>
-      </div>
-      <div class="qa-btn" onclick="showToast('🤖','AI advisor coming soon!')">
+      <div class="qa-btn" onclick="switchPage('chat')">
         <div class="qa-icon" style="background:rgba(163,116,247,0.12)">🤖</div>
-        <div><div class="qa-label">AI Advisor</div><div class="qa-sub">Budget tips</div></div>
+        <div><div class="qa-label">Questy AI</div><div class="qa-sub">Ask for tips</div></div>
       </div>
     </div>
   </div>
@@ -262,14 +259,6 @@
         <div class="mission-top"><div class="mission-icon blue">📚</div><div class="mission-meta"><div class="mission-name">Exam Week Lock</div><div class="mission-desc">Lock ₱700 · Study mode savings</div></div><span class="mission-badge badge-done">Completed ✓</span></div>
         <div class="mission-progress"><div class="progress-row"><span class="progress-left">7 of 7 days</span><span class="progress-right blue">100%</span></div><div class="prog-track"><div class="prog-fill blue" style="width:100%"></div></div></div>
         <div class="mission-footer"><div class="mission-reward">Earned <span class="reward-pill">+₱140 + 200 XP</span></div><span class="days-left" style="color:var(--green)">✓ Claimed</span></div>
-      </div>
-      <div class="mission-card color-purple locked">
-        <div class="mission-top"><div class="mission-icon purple">💡</div><div class="mission-meta"><div class="mission-name">Bills First Lock</div><div class="mission-desc">Auto-lock 20% for bills &amp; tuition</div></div><span class="mission-badge badge-locked">🔒 Level 10</span></div>
-        <div class="mission-footer"><div class="mission-reward">Reward <span class="reward-pill">+₱200 + 300 XP</span></div><span class="days-left">Reach Level 10 to unlock</span></div>
-      </div>
-      <div class="mission-card color-orange locked">
-        <div class="mission-top"><div class="mission-icon orange">🎯</div><div class="mission-meta"><div class="mission-name">30-Day Streak Saver</div><div class="mission-desc">Save daily for a full month</div></div><span class="mission-badge badge-locked">🔒 Level 15</span></div>
-        <div class="mission-footer"><div class="mission-reward">Reward <span class="reward-pill">+₱500 + 1000 XP</span></div><span class="days-left">Reach Level 15 to unlock</span></div>
       </div>
     </div>
     <div class="new-mission-btn" onclick="openNewMission()">
@@ -308,31 +297,24 @@
       <div class="spend-item"><div class="spend-row"><span class="spend-cat"><span class="spend-cat-icon">🍱</span>Food Delivery</span><span class="spend-amt" style="color:var(--red)">₱820</span></div><div class="prog-track"><div class="prog-fill" style="width:82%;background:linear-gradient(90deg,#a11,var(--red))"></div></div></div>
       <div class="spend-item"><div class="spend-row"><span class="spend-cat"><span class="spend-cat-icon">🚌</span>Transport</span><span class="spend-amt" style="color:var(--gold)">₱320</span></div><div class="prog-track"><div class="prog-fill gold" style="width:32%"></div></div></div>
       <div class="spend-item"><div class="spend-row"><span class="spend-cat"><span class="spend-cat-icon">🛒</span>Groceries</span><span class="spend-amt" style="color:var(--green)">₱250</span></div><div class="prog-track"><div class="prog-fill green" style="width:25%"></div></div></div>
-      <div class="spend-item"><div class="spend-row"><span class="spend-cat"><span class="spend-cat-icon">📱</span>Subscriptions</span><span class="spend-amt" style="color:var(--blue)">₱150</span></div><div class="prog-track"><div class="prog-fill blue" style="width:15%"></div></div></div>
-      <div class="spend-item" style="margin-bottom:0"><div class="spend-row"><span class="spend-cat"><span class="spend-cat-icon">🎮</span>Entertainment</span><span class="spend-amt" style="color:var(--purple)">₱200</span></div><div class="prog-track"><div class="prog-fill purple" style="width:20%"></div></div></div>
     </div>
   </div>
 
-  <!-- LEAGUE PAGE -->
-  <div class="page" id="page-league">
+  <!-- QUESTY AI CHAT PAGE (REPLACED LEAGUE) -->
+  <div class="page" id="page-chat">
     <div class="status-bar"><span>9:41</span><span>●●● WiFi 🔋</span></div>
     <div class="page-header">
-      <div><div class="greeting">Gold League · April 2025</div><div class="page-title">Rankings 🏆</div></div>
+      <div><div class="greeting">AI Budget Advisor</div><div class="page-title">Questy 🤖</div></div>
       <div class="avatar">L</div>
     </div>
-    <div style="text-align:center;padding:0 20px 20px"><div style="font-size:13px;color:var(--muted)">Top savers get bonus XLM rewards at month end</div></div>
-    <div class="leaderboard">
-      <div class="lb-row"><div class="lb-rank gold">1</div><div class="lb-avatar" style="background:rgba(245,200,66,0.15);color:var(--gold)">JR</div><div class="lb-info"><div class="lb-name">Jasmine Reyes</div><div class="lb-sub">7 missions · 22-day streak 🔥</div></div><div class="lb-xp">2,140<span> XP</span></div></div>
-      <div class="lb-row"><div class="lb-rank silver">2</div><div class="lb-avatar" style="background:rgba(170,180,200,0.15);color:#aab4c8">MG</div><div class="lb-info"><div class="lb-name">Miguel Garcia</div><div class="lb-sub">5 missions · 15-day streak</div></div><div class="lb-xp">1,870<span> XP</span></div></div>
-      <div class="lb-row"><div class="lb-rank bronze">3</div><div class="lb-avatar" style="background:rgba(205,127,50,0.15);color:#cd7f32">AC</div><div class="lb-info"><div class="lb-name">Angel Cruz</div><div class="lb-sub">6 missions · 9-day streak</div></div><div class="lb-xp">1,520<span> XP</span></div></div>
-      <div class="lb-row"><div class="lb-rank">4</div><div class="lb-avatar" style="background:rgba(163,116,247,0.15);color:var(--purple)">KS</div><div class="lb-info"><div class="lb-name">Kian Santos</div><div class="lb-sub">4 missions · 6-day streak</div></div><div class="lb-xp">1,200<span> XP</span></div></div>
-      <div class="lb-row you"><div class="lb-rank" style="color:var(--blue)">5</div><div class="lb-avatar" style="background:rgba(79,142,247,0.2);color:var(--blue)">L</div><div class="lb-info"><div class="lb-name">Lex (You) 👈</div><div class="lb-sub">3 missions · 12-day streak 🔥</div></div><div class="lb-xp">620<span> XP</span></div></div>
-      <div class="lb-row"><div class="lb-rank">6</div><div class="lb-avatar" style="background:rgba(61,232,138,0.12);color:var(--green)">RM</div><div class="lb-info"><div class="lb-name">Rica Mendoza</div><div class="lb-sub">2 missions · 4-day streak</div></div><div class="lb-xp">410<span> XP</span></div></div>
-      <div class="lb-row"><div class="lb-rank">7</div><div class="lb-avatar" style="background:rgba(255,140,66,0.12);color:var(--orange)">DV</div><div class="lb-info"><div class="lb-name">Diego Villanueva</div><div class="lb-sub">2 missions · 3-day streak</div></div><div class="lb-xp">280<span> XP</span></div></div>
+    <div class="chat-container" id="chatContainer">
+      <div class="chat-message bot">
+        Hi Del! I'm Questy, your AI budget advisor. Ask me how much you should lock today, or tips to budget your funds based on your current stats!
+      </div>
     </div>
-    <div style="margin:16px 20px;background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:16px;padding:14px 16px;text-align:center">
-      <div style="font-size:13px;color:var(--gold);font-weight:600">🏅 Top 3 get +₱500 XLM bonus</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:3px">You're 4 spots away — complete 2 more missions!</div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Message Questy..." onkeypress="handleChatKeyPress(event)">
+      <button onclick="sendChatMessage()">Send</button>
     </div>
   </div>
 
@@ -341,8 +323,8 @@
     <div class="status-bar"><span>9:41</span><span>●●● WiFi 🔋</span></div>
     <div class="profile-header">
       <div class="profile-avatar">L</div>
-      <div class="profile-name">Lex Dela Cruz</div>
-      <div class="profile-tag">@lexdc · Quezon City, PH</div>
+      <div class="profile-name">Del Ybanez</div>
+      <div class="profile-tag">@del@gmail.com · Quezon City, PH</div>
       <div class="profile-level">⚡ Level 7 · Quest Saver</div>
     </div>
     <div class="section-label">Earned Badges</div>
@@ -350,18 +332,12 @@
       <div class="badge-item earned"><div class="badge-emoji">🔥</div><div class="badge-name">7-Day Streak</div></div>
       <div class="badge-item earned"><div class="badge-emoji">🍱</div><div class="badge-name">Food Fighter</div></div>
       <div class="badge-item earned"><div class="badge-emoji">🚌</div><div class="badge-name">Commute Pro</div></div>
-      <div class="badge-item earned"><div class="badge-emoji">📚</div><div class="badge-name">Study Saver</div></div>
       <div class="badge-item locked-b"><div class="badge-emoji">💎</div><div class="badge-name">Diamond Saver</div></div>
-      <div class="badge-item locked-b"><div class="badge-emoji">🌟</div><div class="badge-name">Star Performer</div></div>
-      <div class="badge-item locked-b"><div class="badge-emoji">👑</div><div class="badge-name">League Champion</div></div>
-      <div class="badge-item locked-b"><div class="badge-emoji">🏦</div><div class="badge-name">Master Saver</div></div>
     </div>
     <div class="section-label" style="margin-top:16px">Account</div>
     <div class="settings-list">
       <div class="settings-item" onclick="showToast('🔗','Wallet: GDEX...7KLM')"><span class="settings-icon">💼</span><span class="settings-label">Stellar Wallet</span><span class="settings-arrow">›</span></div>
       <div class="settings-item" onclick="showToast('👨‍👩‍👧','OFW parent linked!')"><span class="settings-icon">👨‍👩‍👧</span><span class="settings-label">Linked Senders</span><span class="settings-arrow">›</span></div>
-      <div class="settings-item" onclick="showToast('🔔','Notifications enabled')"><span class="settings-icon">🔔</span><span class="settings-label">Notifications</span><span class="settings-arrow">›</span></div>
-      <div class="settings-item" onclick="showToast('📜','Tx history loaded')"><span class="settings-icon">📜</span><span class="settings-label">Transaction History</span><span class="settings-arrow">›</span></div>
     </div>
   </div>
 
@@ -369,8 +345,8 @@
   <nav class="nav">
     <div class="nav-item active" id="nav-home" onclick="switchPage('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
     <div class="nav-item" id="nav-missions" onclick="switchPage('missions')"><div class="nav-icon">🗺️</div><div class="nav-label">Missions</div></div>
+    <div class="nav-item" id="nav-chat" onclick="switchPage('chat')"><div class="nav-icon">🤖</div><div class="nav-label">Questy</div></div>
     <div class="nav-item" id="nav-stats" onclick="switchPage('stats')"><div class="nav-icon">📊</div><div class="nav-label">Stats</div></div>
-    <div class="nav-item" id="nav-league" onclick="switchPage('league')"><div class="nav-icon">🏆</div><div class="nav-label">League</div></div>
     <div class="nav-item" id="nav-profile" onclick="switchPage('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
   </nav>
 
@@ -410,6 +386,6 @@
   </div>
 
 </div>
-<script src="balancequest.js"></script>
+<script src="Balancequest.js"></script>
 </body>
 </html>
